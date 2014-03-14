@@ -1,17 +1,44 @@
 package com.eugez.app;
 
+import android.app.ExpandableListActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
+import android.widget.SimpleExpandableListAdapter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-public class results extends ActionBarActivity {
+public class Results extends ActionBarActivity {
+
+    //тестовое название факультетов
+    String[] groups = new String[]{"Системная инженерия", "Программная инженерия",
+            "Шоколадная инженерия"};
+
+    String[] firstInfo  =   new String[] {"Рейтинг - 15", "Рейтинг по оригиналам - 10"
+                                            , "Бюджетных мест -12"};
+    String[] secondInfo =   new String[] {"Рейтинг - 12", "Рейтинг по оригиналам - 1"
+                                         ,"Бюджетных мест - 2"};
+    String[] thirdInfo  =   new String[] {"Рейтинг - 5", "Рейтинг по оригиналам - 2"
+                                         ,"Бюджетных мест - 25"};
+
+    //коллекция для групп
+    ArrayList<Map<String, String>> groupData;
+    //коллекция для элементов одной группы
+    ArrayList<Map<String, String>> childDataItem;
+    //общая коллекция для коллекций элементов
+    ArrayList<ArrayList<Map<String, String>>> childData;
+
+    //список атрибутов группы или элементов
+    Map<String,String> m;
+
+    ExpandableListView elvMain;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,20 +46,51 @@ public class results extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.results);
 
-        ListView list = (ListView) findViewById(R.id.expandableListView);
-        String[] values = new String[]{"Системная инженерия - бюджет", "Программная инженерия - бюджет",
-                                        "Шоколадная инженерия", "Гуманитарный Факультет"
-                                        ,"Химический Факультет", "Немецко-Технологический Факультет"};
-        final ArrayList<String> list1 = new ArrayList<String>();
-        for (int i = 0; i < values.length; ++i) {
-            list1.add(values[i]);
+        groupData = new ArrayList<Map<String, String>>();
+
+        for (String group : groups){
+            m = new HashMap<String, String>();
+            m.put("groupName",group);
+            groupData.add(m);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1,list1);
+        String groupForm[] = new String[] {"groupName"};
+        int groupTo[] = new int[] {android.R.id.text1};
 
-        list.setAdapter(adapter);
+        childData = new ArrayList<ArrayList<Map<String, String>>>();
 
+
+        pushToCollection(firstInfo);
+        pushToCollection(secondInfo);
+        pushToCollection(thirdInfo);
+
+        String childFrom[] = new String[] {""};
+        int childTo[]      = new int[] {android.R.id.text1};
+
+        SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(this,
+                groupData,
+                android.R.layout.simple_expandable_list_item_1,
+                groupForm,
+                groupTo,
+                childData,
+                android.R.layout.simple_list_item_1,
+                childFrom,
+                childTo);
+
+        elvMain = (ExpandableListView) findViewById(R.id.expandableListView);
+        elvMain.setAdapter(adapter);
+    }
+
+    private void pushToCollection(String[] firstInfo) {
+        childDataItem = new ArrayList<Map<String, String>>();
+
+        for (String info : firstInfo){
+            m = new HashMap<String, String>();
+            m.put("",info);
+            childDataItem.add(m);
+        }
+
+        childData.add(childDataItem);
     }
 
 
@@ -44,6 +102,18 @@ public class results extends ActionBarActivity {
         return true;
     }
 
+    public void onClickMenu(MenuItem menu) {
+        switch (menu.getItemId()){
+            case R.id.information_settings:
+                Intent intent1 = new Intent(this, Settings.class);
+                startActivity(intent1);
+                break;
+            case R.id.results_settings:
+                Intent intent2 = new Intent(this, Results.class);
+                startActivity(intent2);
+                break;
+        }
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

@@ -1,6 +1,5 @@
 package com.eugez.app;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -10,8 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
-import static com.eugez.app.R.id.button;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements View.OnClickListener {
 
@@ -36,19 +34,36 @@ public class MainActivity extends ActionBarActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
 
-        if (editTxt.length() != 12) {
-            txtView.setText("Длина ID вряд ли может быть меньше 12, стоит проверить ввод!");
+        if (editTxt.length() > 5) {
+            txtView.setText("Длина ID 5!");
+            return;
+        } else if (editTxt.length() < 5) {
+            txtView.setText("Длина ID 5!");
             return;
         } else {
             switch (view.getId()) {
                 case R.id.button:
                     //call second activity
-                    Intent intent = new Intent(this, results.class);
+                    Intent intent = new Intent(this, Results.class);
                     startActivity(intent);
                     break;
                 default:
+                    Toast.makeText(this, "Not implemented yet!", Toast.LENGTH_SHORT);
                     break;
             }
+        }
+    }
+
+    public void onClickMenu(MenuItem menu) {
+        switch (menu.getItemId()){
+            case R.id.information_settings:
+                Intent intent1 = new Intent(this, Settings.class);
+                startActivity(intent1);
+                break;
+            case R.id.results_settings:
+                Intent intent2 = new Intent(this, Results.class);
+                startActivity(intent2);
+                break;
         }
     }
 

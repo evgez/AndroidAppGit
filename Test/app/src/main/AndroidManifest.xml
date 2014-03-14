@@ -17,8 +17,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.eugez.app.results"
+            android:name="com.eugez.app.Results"
             android:label="@string/title_activity_results" >
+        </activity>
+        <activity
+            android:name="com.eugez.app.Settings"
+            android:label="@string/title_activity_settings" >
         </activity>
     </application>
 

@@ -5,17 +5,16 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context=".results">
 
-    <ListView
+    <ExpandableListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/expandableListView"
-        android:visibility="visible"
-        android:transcriptMode="normal"
-        android:stackFromBottom="false"
-        android:focusable="true"
-        android:clickable="true"
-        android:choiceMode="multipleChoice"
-        android:textFilterEnabled="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:choiceMode="singleChoice"
+        android:clickable="false"
+        android:fastScrollEnabled="true"
         android:smoothScrollbar="true"
-        android:scrollingCache="false" />
+        android:visibility="visible" />
 </RelativeLayout>
