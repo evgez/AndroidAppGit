@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.eugez.app.Settings" >
+    
+    <item android:id="@+id/action_settings"
+        android:title="@string/action_settings"
+        android:orderInCategory="100"
+        android:onClick="onClickMenu"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/results_settings"
+        android:title="@string/title_activity_results"
+        android:orderInCategory="200"
+        android:onClick="onClickMenu"
+        app:showAsAction="never" />
+
+    <item android:id="@+id/information_settings"
+        android:title="@string/title_information"
+        android:orderInCategory="200"
+        android:onClick="onClickMenu"
+        app:showAsAction="never" />
+</menu>

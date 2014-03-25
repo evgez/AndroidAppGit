@@ -1,32 +1,30 @@
 package com.eugez.app;
 
-import android.app.ExpandableListActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 import android.widget.SimpleExpandableListAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Results extends ActionBarActivity {
+public class Results extends Activity {
 
     //тестовое название факультетов
     String[] groups = new String[]{"Системная инженерия", "Программная инженерия",
             "Шоколадная инженерия"};
 
-    String[] firstInfo  =   new String[] {"Рейтинг - 15", "Рейтинг по оригиналам - 10"
-                                            , "Бюджетных мест -12"};
-    String[] secondInfo =   new String[] {"Рейтинг - 12", "Рейтинг по оригиналам - 1"
-                                         ,"Бюджетных мест - 2"};
-    String[] thirdInfo  =   new String[] {"Рейтинг - 5", "Рейтинг по оригиналам - 2"
-                                         ,"Бюджетных мест - 25"};
+    String[] firstInfo = new String[]{"Рейтинг - 15", "Рейтинг по оригиналам - 10"
+            , "Бюджетных мест -12"};
+    String[] secondInfo = new String[]{"Рейтинг - 12", "Рейтинг по оригиналам - 1"
+            , "Бюджетных мест - 2"};
+    String[] thirdInfo = new String[]{"Рейтинг - 5", "Рейтинг по оригиналам - 2"
+            , "Бюджетных мест - 25"};
 
     //коллекция для групп
     ArrayList<Map<String, String>> groupData;
@@ -36,7 +34,7 @@ public class Results extends ActionBarActivity {
     ArrayList<ArrayList<Map<String, String>>> childData;
 
     //список атрибутов группы или элементов
-    Map<String,String> m;
+    Map<String, String> m;
 
     ExpandableListView elvMain;
 
@@ -48,14 +46,14 @@ public class Results extends ActionBarActivity {
 
         groupData = new ArrayList<Map<String, String>>();
 
-        for (String group : groups){
+        for (String group : groups) {
             m = new HashMap<String, String>();
-            m.put("groupName",group);
+            m.put("groupName", group);
             groupData.add(m);
         }
 
-        String groupForm[] = new String[] {"groupName"};
-        int groupTo[] = new int[] {android.R.id.text1};
+        String groupForm[] = new String[]{"groupName"};
+        int groupTo[] = new int[]{android.R.id.text1};
 
         childData = new ArrayList<ArrayList<Map<String, String>>>();
 
@@ -64,8 +62,8 @@ public class Results extends ActionBarActivity {
         pushToCollection(secondInfo);
         pushToCollection(thirdInfo);
 
-        String childFrom[] = new String[] {""};
-        int childTo[]      = new int[] {android.R.id.text1};
+        String childFrom[] = new String[]{""};
+        int childTo[] = new int[]{android.R.id.text1};
 
         SimpleExpandableListAdapter adapter = new SimpleExpandableListAdapter(this,
                 groupData,
@@ -84,9 +82,9 @@ public class Results extends ActionBarActivity {
     private void pushToCollection(String[] firstInfo) {
         childDataItem = new ArrayList<Map<String, String>>();
 
-        for (String info : firstInfo){
+        for (String info : firstInfo) {
             m = new HashMap<String, String>();
-            m.put("",info);
+            m.put("", info);
             childDataItem.add(m);
         }
 
@@ -103,7 +101,7 @@ public class Results extends ActionBarActivity {
     }
 
     public void onClickMenu(MenuItem menu) {
-        switch (menu.getItemId()){
+        switch (menu.getItemId()) {
             case R.id.information_settings:
                 Intent intent1 = new Intent(this, Settings.class);
                 startActivity(intent1);
@@ -114,6 +112,7 @@ public class Results extends ActionBarActivity {
                 break;
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

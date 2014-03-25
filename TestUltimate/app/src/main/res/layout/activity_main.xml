@@ -1,0 +1,62 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.evgen3.testultimate.app.MainActivity">
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сохранить ID"
+        android:id="@+id/checkBoxSave"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:checked="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Введите ID:"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberSigned"
+        android:ems="10"
+        android:id="@+id/etID"
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="46dp"
+        android:layout_alignRight="@+id/checkBoxSave"
+        android:layout_alignEnd="@+id/checkBoxSave"
+        android:layout_alignLeft="@+id/checkBoxSave"
+        android:layout_alignStart="@+id/checkBoxSave"
+        android:autoText="false"
+        android:enabled="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:maxLength="5"
+        android:numeric="integer"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentLeft="false"
+        android:textAlignment="center" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Продолжить"
+        android:id="@+id/btnContinue"
+        android:layout_below="@+id/checkBoxSave"
+        android:layout_marginTop="74dp"
+        android:layout_alignLeft="@+id/checkBoxSave"
+        android:layout_alignStart="@+id/checkBoxSave" />
+</RelativeLayout>
