@@ -1,7 +1,10 @@
 package com.evgen3.xmlparser.app.application;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.evgen3.xmlparser.app.R;
 import com.evgen3.xmlparser.app.dialogs.CustomDialog;
@@ -36,6 +40,7 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
     private Bundle savedInstanceState;
+    ConnectivityManager connectivityManager;
 
     public void setSavedInstanceState(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
@@ -46,6 +51,18 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSavedInstanceState(savedInstanceState);
+
+        //trying to connect
+        connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            ConnectToUrl();
+        } else {
+            makeToast(getResources().getString(R.string.connecting_error));
+        }
+        ;
+
+        //connecting to network
 
         CustomDialog customDialog = new CustomDialog();
         customDialog.setActivity(this);
@@ -60,6 +77,14 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+    }
+
+    private void makeToast(String Text) {
+        Toast.makeText(this, Text, Toast.LENGTH_SHORT).show();
+    }
+
+    private void ConnectToUrl() {
+
     }
 
     @Override
@@ -117,11 +142,11 @@ public class MainActivity extends ActionBarActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            Intent intent = new Intent(this,SettingsActivity.class);
+            Intent intent = new Intent(this, SettingsActivity.class);
             startActivity(intent);
             return true;
         }
-        if (id == R.id.action_example){
+        if (id == R.id.action_example) {
             DialogConfirm dialog = new DialogConfirm();
             dialog.setActivity(this);
             dialog.onCreateDialog(getSavedInstanceState()).show();

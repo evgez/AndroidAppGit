@@ -20,6 +20,8 @@
     <string name="custom_dialog_positive">Продолжить</string>
     <string name="custom_dialog_negative">Выйти</string>
     <string name="switch_wifi_text">Только Wi-Fi</string>
+    <string name="connecting_error">Нет подключения к сети.</string>
+    <string name="URL">http://ac.opu.ua/2014/xml/xml_vstup_onpu.php&amp;id=</string>
     <string-array name="array_of_time_variants">
         <item>15 мин.</item>
         <item>1 час</item>
