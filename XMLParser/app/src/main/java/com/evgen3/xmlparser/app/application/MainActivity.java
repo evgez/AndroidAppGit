@@ -3,8 +3,10 @@ package com.evgen3.xmlparser.app.application;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +14,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.CharacterPickerDialog;
+import android.util.Log;
+import android.util.Xml;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,16 +25,30 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evgen3.xmlparser.app.R;
-import com.evgen3.xmlparser.app.dialogs.CustomDialog;
 import com.evgen3.xmlparser.app.dialogs.DialogConfirm;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    TextView textView;
     CharacterPickerDialog cpd;
     String options;
+    SharedPreferences spref;
+    ConnectivityManager connectivityManager;
+    URL connectionURL;
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -40,7 +58,7 @@ public class MainActivity extends ActionBarActivity
      */
     private CharSequence mTitle;
     private Bundle savedInstanceState;
-    ConnectivityManager connectivityManager;
+
 
     public void setSavedInstanceState(Bundle savedInstanceState) {
         this.savedInstanceState = savedInstanceState;
@@ -48,6 +66,7 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String url = getResources().getString(R.string.URL);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setSavedInstanceState(savedInstanceState);
@@ -56,17 +75,36 @@ public class MainActivity extends ActionBarActivity
         connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            ConnectToUrl();
+//            String id = loadId();
+//            //check id
+//            if (id.length() > 0) {
+//                //connect to server with
+//                try {
+            try {
+                connectionURL = new URL(url + "90001");
+                makeToast(connectionURL.toString());
+                new DownloadWebPageTask().execute(connectionURL);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+//            } else {
+//                //generating new user id
+//                CustomDialog customDialog = new CustomDialog();
+//                customDialog.setActivity(this);
+//                customDialog.onCreateDialog(savedInstanceState).show();
+//                try {
+//                    connectionURL = new URL(url + loadId());
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+
+
         } else {
             makeToast(getResources().getString(R.string.connecting_error));
         }
         ;
-
-        //connecting to network
-
-        CustomDialog customDialog = new CustomDialog();
-        customDialog.setActivity(this);
-        customDialog.onCreateDialog(savedInstanceState).show();
 
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -79,13 +117,17 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout));
     }
 
+    private String loadId() {
+        String saved_id = "saved_id";
+        spref = getPreferences(MODE_PRIVATE);
+        String id = spref.getString(saved_id, "");
+        return id;
+    }
+
     private void makeToast(String Text) {
         Toast.makeText(this, Text, Toast.LENGTH_SHORT).show();
     }
 
-    private void ConnectToUrl() {
-
-    }
 
     @Override
     public void onNavigationDrawerItemSelected(int position) {
@@ -154,6 +196,7 @@ public class MainActivity extends ActionBarActivity
         return super.onOptionsItemSelected(item);
     }
 
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -195,5 +238,99 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+    //download web page
+    class DownloadWebPageTask extends AsyncTask<URL, Integer, String> {
+
+        @Override
+        protected String doInBackground(URL... strings) {
+
+            try {
+                return downloadURL(strings[0]);
+            } catch (IOException e) {
+                return "Unable to retrieve webpage";
+            }
+
+        }
+
+        private String downloadURL(URL string) throws IOException {
+
+            InputStream is = null;
+            String contentAsString = "";
+
+            try {
+                HttpURLConnection conn = (HttpURLConnection) string.openConnection();
+                conn.setReadTimeout(10000); //10 seconds
+                conn.setConnectTimeout(15000);//15 seconds
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                conn.connect();
+                int response = conn.getResponseCode();
+                Log.d("-------response code if 200 then good------", String.valueOf(response));
+
+                is = conn.getInputStream();
+                readIT(is);
+            } catch (XmlPullParserException e) {
+                e.printStackTrace();
+            } finally {
+
+                is.close();
+
+            }
+
+
+            return contentAsString;
+        }
+
+        private List readIT(InputStream is) throws IOException, XmlPullParserException {
+            XmlPullParser parser = Xml.newPullParser();
+
+            List<HashMap<String, String>> data = null;
+            HashMap<String, String> info = null;
+            String abiturientName = "";
+            String tagName = null;
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(is, null);
+            String parserTag = "parser ----- debug";
+            while (parser.next() != XmlPullParser.END_DOCUMENT) {
+
+                if (parser.getEventType() == XmlPullParser.START_TAG) {
+                    Log.d(parserTag, parser.getName());
+                    tagName = parser.getName();
+                }
+                if (parser.getEventType() == XmlPullParser.END_TAG) {
+
+                    if (parser.getName().equals("request")) {
+                        data.add(info);
+                    }
+                    Log.d(parserTag, parser.getText());
+                }
+                if (parser.getEventType() == XmlPullParser.TEXT) {
+                    Log.d(parserTag, parser.getText());
+                    if (tagName.equals("abiturient")) {
+                        abiturientName = parser.getText();
+                        mTitle = abiturientName;
+                        setTitle(abiturientName);
+                    }
+                    else {
+                        try{
+                        info.put(tagName, parser.getText());}
+                        catch (NullPointerException e){
+                            Log.d(parserTag,"sorry null pointer :(");
+                        }
+                    }
+                }
+
+            }
+
+//            Reader reader   =   null;
+//            reader  =   new InputStreamReader(is,"UTF-8");
+//            char[]  buffer  =   new char[3072];
+//            reader.read(buffer);
+//            return new String(buffer);
+            return data;
+        }
+    }
+
 
 }
