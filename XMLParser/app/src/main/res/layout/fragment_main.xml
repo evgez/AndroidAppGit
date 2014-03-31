@@ -9,8 +9,18 @@
     tools:context="com.evgen3.xmlparser.app.application.MainActivity$PlaceholderFragment">
 
     <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
+        android:id           ="@+id/section_label"
+        android:layout_width ="wrap_content"
         android:layout_height="wrap_content" />
+
+    <ListView
+        android:layout_width    ="wrap_content"
+        android:layout_height   ="wrap_content"
+        android:id              ="@+id/listViewResults"
+        android:entries         ="@array/array_of_list_headers"
+        android:layout_below    ="@+id/section_label"
+        android:layout_toRightOf="@+id/section_label"
+        android:choiceMode      ="none"
+        tools:listitem          ="@android:layout/simple_list_item_2" />
 
 </RelativeLayout>

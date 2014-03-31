@@ -29,6 +29,17 @@
         <item>3 часа</item>
     </string-array>
 
+    <string-array name="array_of_list_headers">
+        <item>Институт</item>
+        <item>Специальность</item>
+        <item>Квалификация</item>
+        <item>Лицензия</item>
+        <item>Бюджет</item>
+        <item>Рейтинг</item>
+        <item>Привилегия</item>
+        <item>Состояние документов</item>
+    </string-array>
+
     <string name="title_activity_main2">MainActivity</string>
 
 </resources>

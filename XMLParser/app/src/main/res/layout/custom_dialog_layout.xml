@@ -9,8 +9,18 @@
         android:inputType="number"
         android:ems="10"
         android:id="@+id/editTextID"
+        android:layout_marginTop="127dp"
         android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Введите ID:"
+        android:id="@+id/textView"
+        android:layout_alignBottom="@+id/editTextID"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="44dp" />
+        android:layout_marginBottom="69dp"
+        android:textSize="@dimen/abc_action_bar_progress_bar_size" />
 
 </RelativeLayout>

@@ -32,13 +32,11 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MainActivity extends ActionBarActivity
@@ -240,23 +238,24 @@ public class MainActivity extends ActionBarActivity
     }
 
     //download web page
-    class DownloadWebPageTask extends AsyncTask<URL, Integer, String> {
+    class DownloadWebPageTask extends AsyncTask<URL, Integer, List<Map<String, String>>> {
 
         @Override
-        protected String doInBackground(URL... strings) {
+        protected List<Map<String, String>> doInBackground(URL... strings) {
 
             try {
                 return downloadURL(strings[0]);
             } catch (IOException e) {
-                return "Unable to retrieve webpage";
+                makeToast("Unable to retrieve webpage");
             }
 
+            return null;
         }
 
-        private String downloadURL(URL string) throws IOException {
+        private List<Map<String, String>> downloadURL(URL string) throws IOException {
 
             InputStream is = null;
-            String contentAsString = "";
+            List<Map<String, String>> listData = null;
 
             try {
                 HttpURLConnection conn = (HttpURLConnection) string.openConnection();
@@ -269,7 +268,7 @@ public class MainActivity extends ActionBarActivity
                 Log.d("-------response code if 200 then good------", String.valueOf(response));
 
                 is = conn.getInputStream();
-                readIT(is);
+                readIT(is, listData);
             } catch (XmlPullParserException e) {
                 e.printStackTrace();
             } finally {
@@ -279,16 +278,18 @@ public class MainActivity extends ActionBarActivity
             }
 
 
-            return contentAsString;
+            return listData;
         }
 
-        private List readIT(InputStream is) throws IOException, XmlPullParserException {
+        private List readIT(InputStream is, List<Map<String, String>> listData) throws IOException, XmlPullParserException {
             XmlPullParser parser = Xml.newPullParser();
 
-            List<HashMap<String, String>> data = null;
-            HashMap<String, String> info = null;
+
+            Map<String, String> info = null;
+
             String abiturientName = "";
             String tagName = null;
+            String tagText = null;
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(is, null);
             String parserTag = "parser ----- debug";
@@ -298,37 +299,30 @@ public class MainActivity extends ActionBarActivity
                     Log.d(parserTag, parser.getName());
                     tagName = parser.getName();
                 }
+
                 if (parser.getEventType() == XmlPullParser.END_TAG) {
 
-                    if (parser.getName().equals("request")) {
-                        data.add(info);
+                    info.put(tagName, tagText);
+                    if (tagName.equals("request")) {
+                        listData.add(info);
                     }
-                    Log.d(parserTag, parser.getText());
+
                 }
+
                 if (parser.getEventType() == XmlPullParser.TEXT) {
                     Log.d(parserTag, parser.getText());
-                    if (tagName.equals("abiturient")) {
+                    if (tagName.equals("person")) {
                         abiturientName = parser.getText();
                         mTitle = abiturientName;
                         setTitle(abiturientName);
-                    }
-                    else {
-                        try{
-                        info.put(tagName, parser.getText());}
-                        catch (NullPointerException e){
-                            Log.d(parserTag,"sorry null pointer :(");
-                        }
+                    } else {
+                        tagText = parser.getText();
                     }
                 }
 
             }
 
-//            Reader reader   =   null;
-//            reader  =   new InputStreamReader(is,"UTF-8");
-//            char[]  buffer  =   new char[3072];
-//            reader.read(buffer);
-//            return new String(buffer);
-            return data;
+            return listData;
         }
     }
 
